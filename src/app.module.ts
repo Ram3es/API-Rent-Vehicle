@@ -1,4 +1,4 @@
-import { User } from './user/user.entity';
+import { User } from "./user/user.entity";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -20,7 +20,7 @@ import { UserModule } from "./user/user.module";
       database: process.env.POSTGRES_DB,
       entities: [User],
       synchronize: true,
-      autoLoadEntities: true
+      autoLoadEntities: true,
     }),
     UserModule,
   ],
