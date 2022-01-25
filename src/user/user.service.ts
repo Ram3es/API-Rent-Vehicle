@@ -20,8 +20,8 @@ export class UserService {
   async getOne(id: string): Promise<User>{
     return await this.usersRepository.findOne(id)
   }
-  async update(id: string, dto: UpdateUserDto){
-    return this.usersRepository.update(id,{...dto})
+  async update(id: string, dto: UpdateUserDto):Promise<void>{
+     this.usersRepository.update(id,dto)
   }
   async delete(id: string){
     return this.usersRepository.delete(id)
