@@ -22,6 +22,8 @@ export class User {
   lastName: string;
   @Column({ nullable: true })
   cashe: number;
+  @Column({ unique: true, nullable: true })
+  userKey: string;
   @CreateDateColumn()
   createdAt: Date;
   @UpdateDateColumn()
