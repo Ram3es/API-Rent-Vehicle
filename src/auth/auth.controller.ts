@@ -1,16 +1,9 @@
-import { UpdateUserDto } from './../user/dto/update-user.dto';
-import { ValidationPipes } from './../pipes/validation.pipes';
+import { UpdateUserDto } from "./../user/dto/update-user.dto";
+import { ValidationPipes } from "./../pipes/validation.pipes";
 import { JwtAuthGuard } from "./guards/auth.guard";
 import { CreateUserDto } from "./../user/dto/create-user.dto";
 import { AuthService } from "./auth.service";
-import {
-  Body,
-  Controller,
-  Param,
-  Post,
-  Get,
-  Req,
-} from "@nestjs/common";
+import { Body, Controller, Param, Post, Get, Req } from "@nestjs/common";
 import { Request } from "express";
 
 @Controller("auth")
@@ -18,7 +11,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post("registration")
   async signUp(@Body() dtoUser: CreateUserDto) {
-     return await this.authService.registration(dtoUser);
+    return await this.authService.registration(dtoUser);
   }
   //@UseGuards(JwtAuthGuard)
   @Post("login")

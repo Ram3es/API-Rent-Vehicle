@@ -1,4 +1,4 @@
-import { MailService } from './../mail/mail.service';
+import { MailService } from "./../mail/mail.service";
 import {
   HttpException,
   HttpStatus,
@@ -17,7 +17,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly mailService: MailService
+    private readonly mailService: MailService,
   ) {}
 
   async registration({ email, password }: CreateUserDto) {
@@ -60,7 +60,10 @@ export class AuthService {
       );
     }
     const token = this.generateToken(user, "15m");
-     await this.mailService.sendMail(user.email,`${process.env.CLIENT_URL}/reset-password/${token}`)
+    await this.mailService.sendMail(
+      user.email,
+      `${process.env.CLIENT_URL}/reset-password/${token}`,
+    );
     return {
       token,
     };
