@@ -1,4 +1,4 @@
-import { ValidationPipes } from './pipes/validation.pipes';
+import { ValidationPipes } from "./pipes/validation.pipes";
 import { User } from "./user/user.entity";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
@@ -42,12 +42,15 @@ import { MailerModule } from "@nestjs-modules/mailer";
       defaults: {
         from: '"nest-modules" <modules@nestjs.com>',
       },
-    })
+    }),
   ],
   controllers: [AppController],
-  providers: [{
-    provide:"APP_PIPE",
-    useClass: ValidationPipes
-  },AppService,],
+  providers: [
+    {
+      provide: "APP_PIPE",
+      useClass: ValidationPipes,
+    },
+    AppService,
+  ],
 })
 export class AppModule {}
