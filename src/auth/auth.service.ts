@@ -1,3 +1,4 @@
+import { MailService } from './../mail/mail.service';
 import {
   HttpException,
   HttpStatus,
@@ -16,6 +17,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService
   ) {}
 
   async registration({ email, password }: CreateUserDto) {
@@ -49,7 +51,7 @@ export class AuthService {
     const userKey = await bcrypt.genSalt(5);
     await this.userService.update(id, { userKey });
   }
-  async forgot(email: string) {
+  async forgot({ email }: Partial<CreateUserDto>) {
     const user = await this.userService.getUserByEmail(email);
     if (!user) {
       throw new HttpException(
@@ -57,12 +59,17 @@ export class AuthService {
         HttpStatus.NOT_FOUND,
       );
     }
+    const token = this.generateToken(user, "15m");
+     await this.mailService.sendMail(user.email,`${process.env.CLIENT_URL}/reset-password/${token}`)
+    return {
+      token,
+    };
   }
 
-  private generateToken({ id, email, userKey }: User) {
+  private generateToken({ id, email, userKey }: User, exp?: string) {
     const payload = { id, email };
     const secret = process.env.JWT_SECRET_KEY.concat(userKey);
-    return this.jwtService.sign(payload, { secret });
+    return this.jwtService.sign(payload, { secret, expiresIn: exp || "24h" });
   }
   private async validateUser({ email, password }: CreateUserDto) {
     const existUser = await this.userService.getUserByEmail(email);

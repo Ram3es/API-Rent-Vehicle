@@ -25,8 +25,9 @@ export class AuthController {
     return this.authService.login(dtoUser, req);
   }
   @Post("forgot")
-  async forgotPass(@Body() email: string) {
-    const user = await this.authService.forgot(email);
+  async forgotPass(@Body() email: Partial<CreateUserDto>) {
+    const token = await this.authService.forgot(email);
+    return token;
   }
   @Get("logout/:id")
   async signOut(@Param("id") id: string) {
