@@ -2,8 +2,8 @@
 /dist
 /node_modules
 
-.production1.env
-.development1.env
+.production.env
+.development.env
 # Logs
 logs
 *.log
