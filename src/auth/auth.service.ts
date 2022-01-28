@@ -89,7 +89,7 @@ export class AuthService {
       const secret = process.env.JWT_SECRET_KEY.concat(userKey);
       await this.jwtService.verify(token, { secret });
     } catch (e) {
-      throw new HttpException("Access forbiden", HttpStatus.FORBIDDEN);
+      throw new HttpException("Access forbiden, token has expired", HttpStatus.FORBIDDEN);
     }
   }
 }
