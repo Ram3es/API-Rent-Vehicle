@@ -1,3 +1,4 @@
+import { generateSalt } from './../utils/genrateSalt';
 import { MailService } from "./../mail/mail.service";
 import {
   HttpException,
@@ -23,14 +24,14 @@ export class AuthService {
   async registration({ email, password }: CreateUserDto) {
     const isUserExist = await this.userService.getUserByEmail(email);
     if (isUserExist) {
-      throw new HttpException("User with such email already exist", 401);
+      throw new HttpException("User with such email already exist", HttpStatus.BAD_REQUEST);
     }
-    const salt = await bcrypt.genSalt(5);
-    const hashPassword = await bcrypt.hash(password, salt);
+    const userKey = await generateSalt(5)
+    const hashPassword = await bcrypt.hash(password, await generateSalt(6));
     const user = await this.userService.create({
       email,
       password: hashPassword,
-      userKey: salt,
+      userKey
     });
     return {
       token: this.generateToken(user),

@@ -11,8 +11,11 @@ import {
   Put,
 } from "@nestjs/common";
 import { User } from "./user.entity";
+import { EUserPath } from "./user.constants";
 
-@Controller("user")
+
+
+@Controller(EUserPath.USER)
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Post()
