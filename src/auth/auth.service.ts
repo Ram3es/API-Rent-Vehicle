@@ -1,4 +1,4 @@
-import { generateSalt } from './../utils/genrateSalt';
+import { generateSalt } from "./../utils/genrateSalt";
 import { MailService } from "./../mail/mail.service";
 import {
   HttpException,
@@ -11,7 +11,6 @@ import { UserService } from "./../user/user.service";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 import { User } from "src/user/user.entity";
 import { JwtService } from "@nestjs/jwt";
-import { Request } from "express";
 
 @Injectable()
 export class AuthService {
@@ -24,31 +23,28 @@ export class AuthService {
   async registration({ email, password }: CreateUserDto) {
     const isUserExist = await this.userService.getUserByEmail(email);
     if (isUserExist) {
-      throw new HttpException("User with such email already exist", HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        "User with such email already exist",
+        HttpStatus.BAD_REQUEST,
+      );
     }
-    const userKey = await generateSalt(5)
+    const userKey = await generateSalt(5);
     const hashPassword = await bcrypt.hash(password, await generateSalt(6));
     const user = await this.userService.create({
       email,
       password: hashPassword,
-      userKey
+      userKey,
     });
     return {
       token: this.generateToken(user),
     };
   }
-  async login(dto: CreateUserDto, req: Request) {
-    const user = await this.validateUser(dto);
-    const authHeader = req.headers.authorization;
-    const tokenAccess = authHeader.split(" ")[0];
-    if (tokenAccess) {
-      await this.verifyToken(tokenAccess, user.userKey);
-    }
+  async login(user: Partial<User>) {
     return {
       token: this.generateToken(user),
     };
   }
-  async logout(id: string) {
+  async logout(id: number) {
     const userKey = await bcrypt.genSalt(5);
     await this.userService.update(id, { userKey });
   }
@@ -70,12 +66,12 @@ export class AuthService {
     };
   }
 
-  private generateToken({ id, email, userKey }: User, exp?: string) {
+  private generateToken({ id, email, userKey }: Partial<User>, exp?: string) {
     const payload = { id, email };
     const secret = process.env.JWT_SECRET_KEY.concat(userKey);
     return this.jwtService.sign(payload, { secret, expiresIn: exp || "24h" });
   }
-  private async validateUser({ email, password }: CreateUserDto) {
+  async validateUser({ email, password }: CreateUserDto) {
     const existUser = await this.userService.getUserByEmail(email);
     const isCorrectPass = await bcrypt.compare(password, existUser.password);
     if (!existUser || !isCorrectPass) {

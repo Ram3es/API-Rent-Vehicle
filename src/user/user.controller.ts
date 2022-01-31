@@ -1,3 +1,4 @@
+import { JwtAuthGuard } from "./../auth/guards/jwt-auth.guard";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UserService } from "./user.service";
@@ -9,13 +10,14 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from "@nestjs/common";
 import { User } from "./user.entity";
 import { EUserPath } from "./user.constants";
-
-
-
-@Controller(EUserPath.USER)
+import { Public } from "src/auth/decorators/public.decorator";
+import { GetUserProps } from "./decorators/getId.decoraror";
+@UseGuards(JwtAuthGuard)
+@Controller(EUserPath.USERS)
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Post()
@@ -23,17 +25,18 @@ export class UserController {
     const user = await this.userService.create(dto);
     return user;
   }
+  @Public()
   @Get()
   async getAllUsers(): Promise<User[]> {
     return await this.userService.getAll();
   }
-  @Get("/:id")
-  async getUser(@Param("id") id: string): Promise<User> {
+  @Get(EUserPath.USER)
+  async getUser(@GetUserProps("id") id: number): Promise<User> {
     return await this.userService.getOneByID(id);
   }
   @Put("/:id")
   async updateUser(
-    @Param("id") id: string,
+    @Param("id") id: number,
     @Body() dto: UpdateUserDto,
   ): Promise<void> {
     await this.userService.update(id, dto);

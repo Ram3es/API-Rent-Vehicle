@@ -17,13 +17,13 @@ export class UserService {
   async getAll() {
     return await this.usersRepository.find();
   }
-  async getOneByID(id: string): Promise<User> {
+  async getOneByID(id: number): Promise<User> {
     return await this.usersRepository.findOne(id);
   }
   async getUserByEmail(email: string): Promise<User> {
     return await this.usersRepository.findOne({ email });
   }
-  async update(id: string, dto: UpdateUserDto): Promise<void> {
+  async update(id: number, dto: UpdateUserDto): Promise<void> {
     this.usersRepository.update(id, dto);
   }
   async delete(id: string) {
