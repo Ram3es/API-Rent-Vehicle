@@ -1,3 +1,4 @@
 export const enum EUserPath {
-    USER = "user"
+  USERS = "users",
+  USER = "user",
 }
