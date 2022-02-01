@@ -4,4 +4,5 @@ export const enum EAuthPath {
   SIGN_IN = "login",
   SIGN_OUT = "logout",
   FORGOT = "forgot",
+  RESET = "reset-password",
 }

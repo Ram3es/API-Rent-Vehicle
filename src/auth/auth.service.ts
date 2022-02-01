@@ -65,6 +65,11 @@ export class AuthService {
       token,
     };
   }
+  async resetPass(id: number, { password }: { [key: string]: string }) {
+    const salt = await generateSalt(10);
+    const hashPass = await bcrypt.hash(password, salt);
+    await this.userService.update(id, { password: hashPass });
+  }
 
   private generateToken({ id, email, userKey }: Partial<User>, exp?: string) {
     const payload = { id, email };

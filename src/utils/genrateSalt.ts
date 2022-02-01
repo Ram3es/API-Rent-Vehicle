@@ -1,3 +1,4 @@
-import bcrypt from "bcrypt";
-export const generateSalt = async (round: number) =>
-  await bcrypt.genSalt(round);
+import * as bcrypt from "bcrypt";
+export const generateSalt = async (round: number) => {
+  return await bcrypt.genSalt(round);
+};
