@@ -24,7 +24,7 @@ export class UserService {
     return await this.usersRepository.findOne({ email });
   }
   async update(id: number, dto: UpdateUserDto): Promise<void> {
-    this.usersRepository.update(id, dto);
+    this.usersRepository.update(id, {...dto});
   }
   async delete(id: string) {
     return this.usersRepository.delete(id);

@@ -6,6 +6,7 @@ import { Request } from "express";
 import { EAuthPath } from "./auth.constants";
 import { LocalAuthGuard } from "./guards/local.guard";
 import { User } from "src/user/user.entity";
+import { GetUserProps } from "src/user/decorators/getId.decoraror";
 
 @Controller(EAuthPath.AUTH)
 export class AuthController {
@@ -30,5 +31,13 @@ export class AuthController {
   async signOut(@Req() req: Request) {
     const { id }: Partial<User> = req.user;
     await this.authService.logout(id);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post(EAuthPath.RESET)
+  async resetPassword(
+    @GetUserProps("id") id: number,
+    @Body() pass: { [key: string]: string },
+  ) {
+    await this.authService.resetPass(id, pass);
   }
 }
